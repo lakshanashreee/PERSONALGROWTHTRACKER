@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Growth Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🌱 Personal Growth Tracker</h1>
+            <div class="header-buttons">
+                <button id="themeToggle">🌗 Switch Theme</button>
+                <a href="login.html" class="login-btn">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
+            </div>
+        </header>
+
+        <section class="todo-section">
+            <h2>📌 To-Do List</h2>
+            <div class="todo-input">
+                <input type="text" id="todoInput" placeholder="Enter a task...">
+                <input type="number" id="todoTimer" placeholder="Reminder (mins)">
+                <label>
+                    <input type="checkbox" id="reminderCheck"> Set Reminder
+                </label>
+                <button id="addTask">➕</button>
+            </div>
+            <ul id="todoList"></ul>
+        </section>
+        
+        <!-- Sound for reminder -->
+        <audio id="reminderSound" loop>
+            <source src="Mun-Sellada.mp3" type="audio/mpeg">
+        </audio>
+        <button id="stopSound" style="display: none;">🔇 Stop Alarm</button>
+        
+        
+
+        <section class="mood-tracker">
+            <h2>😃 Mood Tracker</h2>
+            <label for="mood">How's your mood?</label>
+            <select id="mood">
+                <option value="Happy">😊 Happy</option>
+                <option value="Excited">🤩 Excited</option>
+                <option value="Sad">😞 Sad</option>
+                <option value="Stressed">😫 Stressed</option>
+                <option value="Motivated">🔥 Motivated</option>
+            </select>
+            <button id="saveMood">Save Mood</button>
+            <p id="moodHistory"></p>
+        </section>
+
+        <section class="streaks">
+            <h2>🔥 Streaks</h2>
+            <p>Current Streak: <span id="streakCount">0</span> days</p>
+        </section>
+
+        <section class="quote">
+            <h2>💡 Quote of the Day</h2>
+            <p id="dailyQuote"></p>
+        </section>
+
+        <section class="birthday-tracker">
+            <h2>🎂 Birthday Tracker</h2>
+            <input type="text" id="birthdayName" placeholder="Friend's Name">
+            <input type="date" id="birthdayDate">
+            <button id="addBirthday">Add Birthday</button>
+            <ul id="birthdayList"></ul>
+        </section>
+
+        <div id="assistant">
+            <p>👋 Hey there! I'm here to track your progress!</p>
+        </div>
+
+    </div>
+
+</body>
+</html>
