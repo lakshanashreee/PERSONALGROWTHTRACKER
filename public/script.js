@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Script Loaded Successfully! ✅");
+    console.log("Script Loaded Successfully! ✅");  // Debugging Check
 
     // 🎨 Theme Toggle
     const themeToggle = document.getElementById("themeToggle");
@@ -10,22 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 🔥 Streak Tracker Fix
-    let streakCount = parseInt(localStorage.getItem("streak")) || 0;
-    let lastVisit = localStorage.getItem("lastVisit");
-    let today = new Date().toDateString();
-
-    if (lastVisit !== today) {
-        streakCount++;
-        localStorage.setItem("streak", streakCount);
-        localStorage.setItem("lastVisit", today);
-    }
-
+    let streakCount = localStorage.getItem("streak") || 0;
     const streakElement = document.getElementById("streakCount");
+
     if (streakElement) {
         streakElement.textContent = streakCount;
     } else {
         console.warn("⚠️ Element with id 'streakCount' not found! Check your HTML.");
     }
+
+    function updateStreak() {
+        streakCount++;
+        localStorage.setItem("streak", streakCount);
+        if (streakElement) {
+            streakElement.textContent = streakCount;
+        }
+    }
+    setTimeout(updateStreak, 86400000); // Simulate streak increase daily
 
     // ✅ To-Do List with Reminders
     const taskInput = document.getElementById("taskInput");
@@ -154,6 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (registerForm) {
         registerForm.addEventListener("submit", function (e) {
             e.preventDefault();
+            console.log("Register Button Clicked! ✅");
 
             const fullName = document.getElementById("register-name").value.trim();
             const email = document.getElementById("register-email").value.trim();
@@ -177,60 +179,90 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             localStorage.setItem(email, JSON.stringify({ fullName, email, password }));
-            alert("Registration successful! Redirecting...");
+            alert("Registration successful! Redirecting to home page...");
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("currentUser", email);
             window.location.href = "home.html";
         });
     }
 
-    // ✅ Login Handling
-    const loginForm = document.getElementById("login-form");
-    if (loginForm) {
-        loginForm.addEventListener("submit", function (e) {
-            e.preventDefault();
+// ✅ Login Handling
+const loginForm = document.getElementById("login-form");
+if (loginForm) {
+    loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log("Login Button Clicked! ✅");
 
-            const loginEmail = document.getElementById("login-email").value.trim();
-            const loginPassword = document.getElementById("login-password").value.trim();
+        const loginEmail = document.getElementById("login-email").value.trim();
+        const loginPassword = document.getElementById("login-password").value.trim();
 
-            const storedUserData = localStorage.getItem(loginEmail);
+        if (!loginEmail || !loginPassword) {
+            alert("Please enter both email and password.");
+            return;
+        }
 
-            if (!storedUserData) {
-                alert("User not found! Please register.");
-                return;
-            }
+        const storedUserData = localStorage.getItem(loginEmail);
+        
+        if (!storedUserData) {
+            alert("User not found! Please register first.");
+            return;
+        }
 
+        try {
             const storedUser = JSON.parse(storedUserData);
+
             if (loginPassword === storedUser.password) {
-                alert("Login successful!");
+                alert("Login successful! Redirecting to home page...");
                 localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("currentUser", loginEmail);
                 window.location.href = "home.html";
             } else {
-                alert("Incorrect password.");
+                alert("Incorrect password. Please try again.");
             }
-        });
-    }
+        } catch (error) {
+            alert("An error occurred while logging in. Please try again.");
+            console.error("Login Error:", error);
+        }
+    });
+}
+
 
     // ✅ Logout Handling
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
-            localStorage.clear();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("currentUser");
             alert("Logged out successfully!");
             window.location.href = "index.html";
         });
     }
 
-    // ✅ Welcome Page Handling
+    // ✅ Prevent Unauthorized Access
+    if (window.location.pathname.includes("home.html")) {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            alert("You must log in first!");
+            window.location.href = "login.html";
+        }
+    }
+
+    // ✅ Redirect Logged-in Users
+    if (localStorage.getItem("isLoggedIn") === "true") {
+        let currentPage = window.location.pathname.split("/").pop();
+        if (currentPage === "login.html" || currentPage === "register.html") {
+            window.location.href = "home.html";
+        }
+    }
+
+    // 🏠 Welcome Page & Authentication UI
     const getStartedBtn = document.getElementById("getStarted");
     if (getStartedBtn) {
         getStartedBtn.addEventListener("click", () => {
             document.querySelector(".auth-container").style.bottom = "0";
             document.querySelector(".welcome-screen").style.display = "none";
         });
-        getStartedBtn.style.display = "none";
     }
 
+    // Clear session storage to show the welcome page every time Live Server restarts
     sessionStorage.clear();
 });
