@@ -1,165 +1,226 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("Script Loaded Successfully! ✅");  // Debugging Check
 
     // 🎨 Theme Toggle
     const themeToggle = document.getElementById("themeToggle");
-    themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark-theme");
-    });
-
-    const todoInput = document.getElementById("todoInput");
-const todoTimer = document.getElementById("todoTimer");
-const reminderCheck = document.getElementById("reminderCheck");
-const addTaskBtn = document.getElementById("addTask");
-const todoList = document.getElementById("todoList");
-const reminderSound = document.getElementById("reminderSound");
-const stopSoundBtn = document.getElementById("stopSound");
-
-addTaskBtn.addEventListener("click", () => {
-    if (todoInput.value.trim() === "") return;
-
-    let li = document.createElement("li");
-
-    // Task text
-    let taskText = document.createElement("span");
-    taskText.textContent = todoInput.value;
-
-    // ✔ Tick button (Strike through)
-    let tickBtn = document.createElement("button");
-    tickBtn.textContent = "✔️";
-    tickBtn.classList.add("tick-btn");
-    tickBtn.addEventListener("click", () => taskText.classList.toggle("completed"));
-
-    // ❌ Delete button
-    let deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "❌";
-    deleteBtn.classList.add("delete-btn");
-    deleteBtn.addEventListener("click", () => li.remove());
-
-    li.appendChild(taskText);
-    li.appendChild(tickBtn);
-    li.appendChild(deleteBtn);
-    todoList.appendChild(li);
-
-    // Reminder logic
-    if (reminderCheck.checked && todoTimer.value.trim() !== "") {
-        let time = parseInt(todoTimer.value) * 60000;
-        setTimeout(() => {
-            reminderSound.play();
-            stopSoundBtn.style.display = "block";
-            alert(`⏰ Reminder: ${todoInput.value}`);
-        }, time);
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-theme");
+        });
     }
 
-    // Clear input fields
-    todoInput.value = "";
-    todoTimer.value = "";
-    reminderCheck.checked = false;
-});
-
-// Stop alarm button
-stopSoundBtn.addEventListener("click", () => {
-    reminderSound.pause();
-    reminderSound.currentTime = 0;
-    stopSoundBtn.style.display = "none";
-});
-
-
-    // 😃 Mood Tracker
-    const saveMoodBtn = document.getElementById("saveMood");
-    const moodHistory = document.getElementById("moodHistory");
-
-    saveMoodBtn.addEventListener("click", () => {
-        let mood = document.getElementById("mood").value;
-        let currentDate = new Date().toLocaleDateString();
-        let moodText = `(${currentDate}) - Mood: ${mood}`;
-        let para = document.createElement("p");
-        para.textContent = moodText;
-        moodHistory.appendChild(para);
-    });
-
-    // 🔥 Streak Tracker
+    // 🔥 Streak Tracker Fix
     let streakCount = localStorage.getItem("streak") || 0;
-    document.getElementById("streakCount").textContent = streakCount;
+    const streakElement = document.getElementById("streakCount");
+
+    if (streakElement) {
+        streakElement.textContent = streakCount;
+    } else {
+        console.warn("⚠️ Element with id 'streakCount' not found! Check your HTML.");
+    }
 
     function updateStreak() {
         streakCount++;
         localStorage.setItem("streak", streakCount);
-        document.getElementById("streakCount").textContent = streakCount;
+        if (streakElement) {
+            streakElement.textContent = streakCount;
+        }
     }
     setTimeout(updateStreak, 86400000); // Simulate streak increase daily
 
-    // 💡 Quote of the Day
+    // ✅ To-Do List with Reminders
+    const todoInput = document.getElementById("todoInput");
+    const todoTimer = document.getElementById("todoTimer");
+    const reminderCheck = document.getElementById("reminderCheck");
+    const addTaskBtn = document.getElementById("addTask");
+    const todoList = document.getElementById("todoList");
+    const reminderSound = document.getElementById("reminderSound");
+    const stopSoundBtn = document.getElementById("stopSound");
+
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener("click", () => {
+            if (todoInput.value.trim() === "") return;
+
+            let li = document.createElement("li");
+
+            let taskText = document.createElement("span");
+            taskText.textContent = todoInput.value;
+
+            let tickBtn = document.createElement("button");
+            tickBtn.textContent = "✔️";
+            tickBtn.classList.add("tick-btn");
+            tickBtn.addEventListener("click", () => taskText.classList.toggle("completed"));
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "❌";
+            deleteBtn.classList.add("delete-btn");
+            deleteBtn.addEventListener("click", () => li.remove());
+
+            li.appendChild(taskText);
+            li.appendChild(tickBtn);
+            li.appendChild(deleteBtn);
+            todoList.appendChild(li);
+
+            if (reminderCheck.checked && todoTimer.value.trim() !== "") {
+                let time = parseInt(todoTimer.value) * 60000;
+                setTimeout(() => {
+                    reminderSound.play();
+                    stopSoundBtn.style.display = "block";
+                    alert(`⏰ Reminder: ${todoInput.value}`);
+                }, time);
+            }
+
+            todoInput.value = "";
+            todoTimer.value = "";
+            reminderCheck.checked = false;
+        });
+
+        stopSoundBtn.addEventListener("click", () => {
+            reminderSound.pause();
+            reminderSound.currentTime = 0;
+            stopSoundBtn.style.display = "none";
+        });
+    }
+
+    // ✅ Mood Tracker
+    const saveMoodBtn = document.getElementById("saveMood");
+    const moodHistory = document.getElementById("moodHistory");
+
+    if (saveMoodBtn) {
+        saveMoodBtn.addEventListener("click", () => {
+            let mood = document.getElementById("mood").value;
+            let currentDate = new Date().toLocaleDateString();
+            let moodText = `(${currentDate}) - Mood: ${mood}`;
+            let para = document.createElement("p");
+            para.textContent = moodText;
+            moodHistory.appendChild(para);
+        });
+    }
+
+    // ✅ Quote of the Day
     const quotes = [
         "Success is not final; failure is not fatal: It is the courage to continue that counts.",
         "Don’t watch the clock; do what it does. Keep going.",
         "Believe in yourself and all that you are."
     ];
-    document.getElementById("dailyQuote").textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    const dailyQuote = document.getElementById("dailyQuote");
+    if (dailyQuote) {
+        dailyQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    }
 
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    const registerBtn = document.getElementById("registerBtn");
-    const loginBtn = document.getElementById("loginBtn");
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    // Redirect buttons
-    if (registerBtn) registerBtn.addEventListener("click", () => window.location.href = "register.html");
-    if (loginBtn) loginBtn.addEventListener("click", () => window.location.href = "login.html");
-
-    // Registration process
+    // ✅ Register Form Handling
+    const registerForm = document.getElementById("register-form");
     if (registerForm) {
-        registerForm.addEventListener("submit", (e) => {
+        registerForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            let regEmail = document.getElementById("regEmail").value;
-            let regPassword = document.getElementById("regPassword").value;
+            console.log("Register Button Clicked! ✅");
 
-            // Store user in localStorage (Temporary method for testing)
-            localStorage.setItem("userEmail", regEmail);
-            localStorage.setItem("userPassword", regPassword);
+            const fullName = document.getElementById("register-name").value.trim();
+            const email = document.getElementById("register-email").value.trim();
+            const password = document.getElementById("register-password").value.trim();
+            const confirmPassword = document.getElementById("register-confirm-password").value.trim();
+
+            if (!fullName || !email || !password || !confirmPassword) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return;
+            }
+
+            if (localStorage.getItem(email)) {
+                alert("User already registered! Please log in.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            localStorage.setItem(email, JSON.stringify({ fullName, email, password }));
+            alert("Registration successful! Redirecting to home page...");
             localStorage.setItem("isLoggedIn", "true");
-
-            alert("Registration successful! Redirecting to Home.");
+            localStorage.setItem("currentUser", email);
             window.location.href = "home.html";
         });
     }
 
-    // Login process
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            let loginEmail = document.getElementById("loginEmail").value;
-            let loginPassword = document.getElementById("loginPassword").value;
+// ✅ Login Handling
+const loginForm = document.getElementById("login-form");
+if (loginForm) {
+    loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log("Login Button Clicked! ✅");
 
-            let storedEmail = localStorage.getItem("userEmail");
-            let storedPassword = localStorage.getItem("userPassword");
+        const loginEmail = document.getElementById("login-email").value.trim();
+        const loginPassword = document.getElementById("login-password").value.trim();
 
-            if (loginEmail === storedEmail && loginPassword === storedPassword) {
+        if (!loginEmail || !loginPassword) {
+            alert("Please enter both email and password.");
+            return;
+        }
+
+        const storedUserData = localStorage.getItem(loginEmail);
+        
+        if (!storedUserData) {
+            alert("User not found! Please register first.");
+            return;
+        }
+
+        try {
+            const storedUser = JSON.parse(storedUserData);
+
+            if (loginPassword === storedUser.password) {
+                alert("Login successful! Redirecting to home page...");
                 localStorage.setItem("isLoggedIn", "true");
-                alert("Login successful! Redirecting to Home.");
+                localStorage.setItem("currentUser", loginEmail);
                 window.location.href = "home.html";
             } else {
-                alert("Invalid login credentials!");
+                alert("Incorrect password. Please try again.");
             }
-        });
-    }
+        } catch (error) {
+            alert("An error occurred while logging in. Please try again.");
+            console.error("Login Error:", error);
+        }
+    });
+}
 
-    // Logout process
+
+    // ✅ Logout Handling
+    const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
+        logoutBtn.addEventListener("click", function () {
             localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("currentUser");
             alert("Logged out successfully!");
             window.location.href = "index.html";
         });
     }
 
-    // Redirect logged-in users
+    // ✅ Prevent Unauthorized Access
+    if (window.location.pathname.includes("home.html")) {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            alert("You must log in first!");
+            window.location.href = "login.html";
+        }
+    }
+
+    // ✅ Redirect Logged-in Users
     if (localStorage.getItem("isLoggedIn") === "true") {
         let currentPage = window.location.pathname.split("/").pop();
-        if (currentPage !== "home.html") {
+        if (currentPage === "login.html" || currentPage === "register.html") {
             window.location.href = "home.html";
         }
     }
+
+    // 🏠 Welcome Page & Authentication UI
+    const getStartedBtn = document.getElementById("getStarted");
+    if (getStartedBtn) {
+        getStartedBtn.addEventListener("click", () => {
+            document.querySelector(".auth-container").style.bottom = "0";
+            document.querySelector(".welcome-screen").style.display = "none";
+        });
+    }
+
+    // Clear session storage to show the welcome page every time Live Server restarts
+    sessionStorage.clear();
 });

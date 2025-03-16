@@ -1,6 +1,7 @@
 /* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+/* 🌿 Theme Variables */
 :root {
     --bg-color: rgba(255, 255, 255, 0.2);
     --shadow: rgba(0, 0, 0, 0.1);
@@ -15,17 +16,22 @@
     --accent: #ff7675;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background: url('https://source.unsplash.com/1600x900/?nature,abstract') no-repeat center center fixed;
-    background-size: cover;
-    color: var(--text-color);
-    text-align: center;
+/* 🌸 General Styles */
+html, body {
     margin: 0;
     padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    height: 100%;
+    text-align: center;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.container {
+/* 🌟 Containers */
+.container, .todo-section {
     max-width: 600px;
     margin: auto;
     background: var(--bg-color);
@@ -35,12 +41,54 @@ body {
     backdrop-filter: blur(10px);
 }
 
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    position: relative;
+}
+
+/* 🎬 Smooth Slide-Up Animation */
+.auth-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 350px;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: slideUp 0.8s ease-out forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🌟 Slide-Up Keyframes */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 📦 Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* 🔘 Buttons */
 button {
     background: var(--accent);
     color: white;
@@ -50,20 +98,69 @@ button {
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3s;
+    width: 100%;
 }
 
 button:hover {
-    background: #d63031;
+    background: #ff4f4f;
 }
 
-.todo-section {
-    background: var(--bg-color);
-    padding: 15px;
-    margin: 15px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px var(--shadow);
+.welcome-screen button {
+    background: #ff9a8b;
+    font-size: 1.2em;
+    padding: 12px 24px;
+    border-radius: 30px;
 }
 
+.welcome-screen button:hover {
+    background: #ff6f61;
+}
+
+/* 📝 Input Fields */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.auth-box input:focus {
+    border-color: #ff6f61;
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+}
+
+/* 🎭 Hide Register Form Initially */
+.hidden {
+    display: none;
+}
+
+/* 🌿 Tabs */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.tabs button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #555;
+}
+
+.tabs .active {
+    border-bottom: 3px solid #ff6f61;
+    font-weight: bold;
+}
+
+/* ✅ To-Do List */
 .todo-input input, .todo-input label {
     padding: 8px;
     margin: 5px;
@@ -73,8 +170,8 @@ button:hover {
 
 .todo-input button {
     padding: 8px 12px;
-    cursor: pointer;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 ul {
@@ -127,21 +224,23 @@ li {
     border-radius: 5px;
 }
 
-
-input, select {
-    padding: 10px;
-    width: 80%;
-    margin: 10px 0;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
+/* ✅ Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-#assistant {
-    background: var(--accent);
-    color: white;
-    padding: 10px;
+::-webkit-scrollbar-thumb {
+    background: #ff6f61;
     border-radius: 10px;
-    box-shadow: 0 4px 8px var(--shadow);
-    margin-top: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #ff4f4f;
+}
+
+/* 📱 Mobile & Small Screen Fix */
+@media screen and (max-width: 400px) {
+    .auth-box {
+        width: 90%;
+    }
 }

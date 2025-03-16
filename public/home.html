@@ -14,8 +14,7 @@
             <h1>🌱 Personal Growth Tracker</h1>
             <div class="header-buttons">
                 <button id="themeToggle">🌗 Switch Theme</button>
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
+                <button id="logoutBtn">🚪 Logout</button>
             </div>
         </header>
 
@@ -38,8 +37,6 @@
         </audio>
         <button id="stopSound" style="display: none;">🔇 Stop Alarm</button>
         
-        
-
         <section class="mood-tracker">
             <h2>😃 Mood Tracker</h2>
             <label for="mood">How's your mood?</label>
@@ -77,6 +74,15 @@
         </div>
 
     </div>
+
+    <script>
+        // Logout functionality
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            localStorage.removeItem("registered");
+            alert("Logged Out Successfully!");
+            window.location.href = "index.html";
+        });
+    </script>
 
 </body>
 </html>

@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Login | Personal Growth Tracker</title>
+    <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
+
+    <div class="welcome-screen">
+        <h1>Welcome Back! 🌿</h1>
+        <p>Track your growth and stay motivated!</p>
     </div>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="tabs">
+                <button class="active">Login</button>
+                <a href="register.html"><button>Register</button></a>
+            </div>
+
+            <form id="login-form">  <!-- ✅ Added ID -->
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <p>Don't have an account? <a href="register.html">Sign up</a></p>
+        </div>
+    </div>
+
 </body>
 </html>
