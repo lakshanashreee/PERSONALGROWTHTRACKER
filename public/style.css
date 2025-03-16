@@ -11,9 +11,9 @@
 
 .dark-theme {
     --bg-color: rgba(0, 0, 0, 0.4);
-    --shadow: rgba(255, 255, 255, 0.1);
+    --shadow: rgba(11, 11, 11, 0.1);
     --text-color: #fff;
-    --accent: #ff7675;
+    --accent: #e11818;
 }
 
 /* 🌸 General Styles */
@@ -160,18 +160,43 @@ input, select {
     font-weight: bold;
 }
 
-/* ✅ To-Do List */
-.todo-input input, .todo-input label {
-    padding: 8px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+/* ✅ To-Do List Styling */
+.todo-section {
+    width: 100%;
+    max-width: 400px; /* Keeps the section neat */
+    margin: auto;
+    padding: 10px;
 }
 
+/* 🔹 Aligns input fields neatly */
+.todo-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Adds spacing between elements */
+    flex-wrap: wrap;  /* Prevents overlapping */
+}
+
+/* 🔹 Task Input & Time Picker */
+.todo-input input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* 🔹 Button Styling */
 .todo-input button {
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+/* 🔹 Prevent overlapping */
+.todo-input label {
+    white-space: nowrap;
 }
 
 ul {
@@ -187,9 +212,10 @@ li {
     padding: 8px;
     margin: 5px 0;
     border-radius: 5px;
-    box-shadow: 0 2px 4px var(--shadow);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ✅ Completed Task Style */
 .completed {
     text-decoration: line-through;
     color: grey;
@@ -214,6 +240,12 @@ li {
     cursor: pointer;
 }
 
+.timer {
+    font-size: 12px;
+    color: red;
+    font-weight: bold;
+}
+
 #stopSound {
     margin-top: 10px;
     padding: 8px;
@@ -223,6 +255,7 @@ li {
     cursor: pointer;
     border-radius: 5px;
 }
+
 
 /* ✅ Custom Scrollbar */
 ::-webkit-scrollbar {

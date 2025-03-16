@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Script Loaded Successfully! ✅");  // Debugging Check
+    console.log("Script Loaded Successfully! ✅");
 
     // 🎨 Theme Toggle
     const themeToggle = document.getElementById("themeToggle");
@@ -10,28 +10,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 🔥 Streak Tracker Fix
-    let streakCount = localStorage.getItem("streak") || 0;
-    const streakElement = document.getElementById("streakCount");
+    let streakCount = parseInt(localStorage.getItem("streak")) || 0;
+    let lastVisit = localStorage.getItem("lastVisit");
+    let today = new Date().toDateString();
 
+    if (lastVisit !== today) {
+        streakCount++;
+        localStorage.setItem("streak", streakCount);
+        localStorage.setItem("lastVisit", today);
+    }
+
+    const streakElement = document.getElementById("streakCount");
     if (streakElement) {
         streakElement.textContent = streakCount;
     } else {
         console.warn("⚠️ Element with id 'streakCount' not found! Check your HTML.");
     }
 
-    function updateStreak() {
-        streakCount++;
-        localStorage.setItem("streak", streakCount);
-        if (streakElement) {
-            streakElement.textContent = streakCount;
-        }
-    }
-    setTimeout(updateStreak, 86400000); // Simulate streak increase daily
-
     // ✅ To-Do List with Reminders
-    const todoInput = document.getElementById("todoInput");
-    const todoTimer = document.getElementById("todoTimer");
-    const reminderCheck = document.getElementById("reminderCheck");
+    const taskInput = document.getElementById("taskInput");
+    const reminderTimeInput = document.getElementById("reminder-time");
     const addTaskBtn = document.getElementById("addTask");
     const todoList = document.getElementById("todoList");
     const reminderSound = document.getElementById("reminderSound");
@@ -39,47 +37,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (addTaskBtn) {
         addTaskBtn.addEventListener("click", () => {
-            if (todoInput.value.trim() === "") return;
+            const taskText = taskInput.value.trim();
+            const reminderTime = reminderTimeInput.value.trim();
 
-            let li = document.createElement("li");
-
-            let taskText = document.createElement("span");
-            taskText.textContent = todoInput.value;
-
-            let tickBtn = document.createElement("button");
-            tickBtn.textContent = "✔️";
-            tickBtn.classList.add("tick-btn");
-            tickBtn.addEventListener("click", () => taskText.classList.toggle("completed"));
-
-            let deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "❌";
-            deleteBtn.classList.add("delete-btn");
-            deleteBtn.addEventListener("click", () => li.remove());
-
-            li.appendChild(taskText);
-            li.appendChild(tickBtn);
-            li.appendChild(deleteBtn);
-            todoList.appendChild(li);
-
-            if (reminderCheck.checked && todoTimer.value.trim() !== "") {
-                let time = parseInt(todoTimer.value) * 60000;
-                setTimeout(() => {
-                    reminderSound.play();
-                    stopSoundBtn.style.display = "block";
-                    alert(`⏰ Reminder: ${todoInput.value}`);
-                }, time);
+            if (!taskText) {
+                alert("⚠ Please enter a task!");
+                return;
             }
 
-            todoInput.value = "";
-            todoTimer.value = "";
-            reminderCheck.checked = false;
+            // Create list item
+            let li = document.createElement("li");
+            let timerSpan = document.createElement("span");
+
+            li.innerHTML = `
+                <span>${taskText}</span>
+                <div>
+                    <button class="tick-btn">✔️</button>
+                    <button class="delete-btn">❌</button>
+                </div>
+            `;
+
+            if (reminderTime) {
+                timerSpan.classList.add("timer");
+                li.insertBefore(timerSpan, li.querySelector("span").nextSibling);
+                startTimer(reminderTime, taskText, timerSpan);
+            }
+
+            todoList.appendChild(li);
+
+            li.querySelector(".tick-btn").addEventListener("click", () => {
+                li.classList.toggle("completed");
+            });
+
+            li.querySelector(".delete-btn").addEventListener("click", () => {
+                li.remove();
+            });
+
+            taskInput.value = "";
+            reminderTimeInput.value = "";
         });
 
         stopSoundBtn.addEventListener("click", () => {
-            reminderSound.pause();
-            reminderSound.currentTime = 0;
+            if (reminderSound) {
+                reminderSound.pause();
+                reminderSound.currentTime = 0;
+            }
             stopSoundBtn.style.display = "none";
         });
+    }
+
+    function startTimer(reminderTime, taskText, timerSpan) {
+        let [hours, minutes] = reminderTime.split(":").map(Number);
+        let reminderDate = new Date();
+        reminderDate.setHours(hours, minutes, 0, 0);
+
+        let now = new Date();
+        let timeLeft = reminderDate - now;
+
+        if (timeLeft < 0) {
+            reminderDate.setDate(reminderDate.getDate() + 1);
+            timeLeft = reminderDate - now;
+        }
+
+        let updateTimer = setInterval(() => {
+            let now = new Date();
+            let timeLeft = reminderDate - now;
+
+            if (timeLeft <= 0) {
+                clearInterval(updateTimer);
+                timerSpan.textContent = "⏰ Time's up!";
+                playAlarm(taskText);
+            } else {
+                let minutesLeft = Math.floor(timeLeft / 60000);
+                let secondsLeft = Math.floor((timeLeft % 60000) / 1000);
+                timerSpan.textContent = `(${minutesLeft}m ${secondsLeft}s left)`;
+            }
+        }, 1000);
+    }
+
+    function playAlarm(taskText) {
+        if (reminderSound) {
+            reminderSound.play();
+            stopSoundBtn.style.display = "block";
+        }
+        alert(`⏰ Reminder: ${taskText}`);
     }
 
     // ✅ Mood Tracker
@@ -113,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (registerForm) {
         registerForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            console.log("Register Button Clicked! ✅");
 
             const fullName = document.getElementById("register-name").value.trim();
             const email = document.getElementById("register-email").value.trim();
@@ -137,90 +177,60 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             localStorage.setItem(email, JSON.stringify({ fullName, email, password }));
-            alert("Registration successful! Redirecting to home page...");
+            alert("Registration successful! Redirecting...");
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("currentUser", email);
             window.location.href = "home.html";
         });
     }
 
-// ✅ Login Handling
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        console.log("Login Button Clicked! ✅");
+    // ✅ Login Handling
+    const loginForm = document.getElementById("login-form");
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        const loginEmail = document.getElementById("login-email").value.trim();
-        const loginPassword = document.getElementById("login-password").value.trim();
+            const loginEmail = document.getElementById("login-email").value.trim();
+            const loginPassword = document.getElementById("login-password").value.trim();
 
-        if (!loginEmail || !loginPassword) {
-            alert("Please enter both email and password.");
-            return;
-        }
+            const storedUserData = localStorage.getItem(loginEmail);
 
-        const storedUserData = localStorage.getItem(loginEmail);
-        
-        if (!storedUserData) {
-            alert("User not found! Please register first.");
-            return;
-        }
+            if (!storedUserData) {
+                alert("User not found! Please register.");
+                return;
+            }
 
-        try {
             const storedUser = JSON.parse(storedUserData);
-
             if (loginPassword === storedUser.password) {
-                alert("Login successful! Redirecting to home page...");
+                alert("Login successful!");
                 localStorage.setItem("isLoggedIn", "true");
                 localStorage.setItem("currentUser", loginEmail);
                 window.location.href = "home.html";
             } else {
-                alert("Incorrect password. Please try again.");
+                alert("Incorrect password.");
             }
-        } catch (error) {
-            alert("An error occurred while logging in. Please try again.");
-            console.error("Login Error:", error);
-        }
-    });
-}
-
+        });
+    }
 
     // ✅ Logout Handling
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("currentUser");
+            localStorage.clear();
             alert("Logged out successfully!");
             window.location.href = "index.html";
         });
     }
 
-    // ✅ Prevent Unauthorized Access
-    if (window.location.pathname.includes("home.html")) {
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            alert("You must log in first!");
-            window.location.href = "login.html";
-        }
-    }
-
-    // ✅ Redirect Logged-in Users
-    if (localStorage.getItem("isLoggedIn") === "true") {
-        let currentPage = window.location.pathname.split("/").pop();
-        if (currentPage === "login.html" || currentPage === "register.html") {
-            window.location.href = "home.html";
-        }
-    }
-
-    // 🏠 Welcome Page & Authentication UI
+    // ✅ Welcome Page Handling
     const getStartedBtn = document.getElementById("getStarted");
     if (getStartedBtn) {
         getStartedBtn.addEventListener("click", () => {
             document.querySelector(".auth-container").style.bottom = "0";
             document.querySelector(".welcome-screen").style.display = "none";
         });
+        getStartedBtn.style.display = "none";
     }
 
-    // Clear session storage to show the welcome page every time Live Server restarts
     sessionStorage.clear();
 });

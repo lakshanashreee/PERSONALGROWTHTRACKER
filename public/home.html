@@ -20,22 +20,26 @@
 
         <section class="todo-section">
             <h2>📌 To-Do List</h2>
+            
             <div class="todo-input">
-                <input type="text" id="todoInput" placeholder="Enter a task...">
-                <input type="number" id="todoTimer" placeholder="Reminder (mins)">
-                <label>
-                    <input type="checkbox" id="reminderCheck"> Set Reminder
-                </label>
+                <input type="text" id="taskInput" placeholder="Enter task...">
+                
+                <label for="reminder-time">⏰ Set Reminder:</label>
+                <input type="time" id="reminder-time">
+                
                 <button id="addTask">➕</button>
             </div>
+        
             <ul id="todoList"></ul>
         </section>
         
         <!-- Sound for reminder -->
         <audio id="reminderSound" loop>
-            <source src="Mun-Sellada.mp3" type="audio/mpeg">
+            <source src="Mun_Sellada.mp3" type="audio/mpeg">
         </audio>
+        
         <button id="stopSound" style="display: none;">🔇 Stop Alarm</button>
+
         
         <section class="mood-tracker">
             <h2>😃 Mood Tracker</h2>
